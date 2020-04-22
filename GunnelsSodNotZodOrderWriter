@@ -1,0 +1,74 @@
+//AUTHOR: Jacob Gunnels
+//COUSE: CPT 187
+//PURPOSE: OrderWriter class for SodNotZod product ordering program.
+//			Supportive class to create and write to a file.
+//STARTDATE: 04/15/2020
+
+package edu.cpt187.gunnels.participation;
+	
+	import java.io.FileWriter;
+	import java.io.IOException;
+	import java.io.PrintWriter;
+	
+	public class OrderWriter {
+		
+		private static final boolean FOUND = true;
+		private static final boolean NOT_FOUND = false;
+		
+		private boolean fileFoundFlag = false;
+		private String masterFileName = "";
+		private int recordCount = 0;
+		
+		public OrderWriter(String borrowedFileName)
+		{
+			masterFileName = borrowedFileName;
+		}
+		
+		//Setters
+		public void setWriteOrder(
+				int borrowedItemID,
+				String borrowedItemName,
+				double borrowedItemPrice,
+				int borrowedQuantity,
+				double borrowedOrderCost)
+		{
+			try
+			{
+				PrintWriter filePW = new PrintWriter (new FileWriter(getFileName(), true));
+				filePW.printf("\n%d\t%s\t%f\t%d\t%f\n", 
+						borrowedItemID,
+						borrowedItemName,
+						borrowedItemPrice,
+						borrowedQuantity,
+						borrowedOrderCost);
+				fileFoundFlag = FOUND;
+				filePW.close();
+			}
+			catch (IOException ex)
+			{
+				fileFoundFlag = NOT_FOUND;
+			}
+		}
+		
+		//Getters
+		public boolean getFileFoundFlag()
+		{
+			return fileFoundFlag;
+		}
+	
+		public String getFileName()
+		{
+			return masterFileName;
+		}
+		
+		public int getRecordCount()
+		{
+			return recordCount;
+		}
+	}//END OrderWriter
+
+
+
+
+
+	
