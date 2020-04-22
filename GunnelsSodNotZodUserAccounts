@@ -1,0 +1,166 @@
+//AUTHOR: Jacob Gunnels
+//COUSE: CPT 187
+//PURPOSE: UserAccounts class for SodNotZod product ordering program.
+//			Supportive class to manage user accounts.
+//STARTDATE: 04/15/2020
+
+package edu.cpt187.gunnels.participation;
+
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Scanner;
+
+public class UserAccounts {
+	
+	private static final boolean FILE_FOUND = true;
+	private static final boolean FILE_NOT_FOUND = false;
+	private static final int NOT_FOUND = -1;
+	private static final int RESET_VALUE = 0;
+	private static final int MAXIMUM_RECORDS = 50;
+	
+	private String[] userNames = new String[MAXIMUM_RECORDS];
+	private String[] passwords = new String[MAXIMUM_RECORDS];
+	private boolean fileFoundFlag = false;
+	private String masterFileName = "";
+	private int recordCount = 0;
+	private int searchedIndex = 0;
+	
+	public UserAccounts(String borrowedFileName)
+	{
+		masterFileName = borrowedFileName;
+	}
+	
+	//Setters
+	public void setUserAccountArrays()
+	{
+		recordCount = RESET_VALUE;
+		
+		try
+		{
+			Scanner infile = new Scanner(new FileInputStream(masterFileName));
+			
+			while (infile.hasNext() == true && recordCount < MAXIMUM_RECORDS)
+			{
+				userNames[recordCount] = infile.next();
+				passwords[recordCount] = infile.next();
+				recordCount++;
+			}
+			
+			infile.close();
+		}//END try
+		
+		catch (IOException ex)
+		{
+			recordCount = NOT_FOUND;
+		}
+	}
+	
+	public void setSearchedIndex(String borrowedUserName)
+	{
+		searchedIndex = getSeqSearch(borrowedUserName);
+	}
+	
+	public void setSearchedIndex(String borrowedUserName, String borrowedPassword)
+	{		
+		if (getPasswordMatch(borrowedPassword) == true)
+		{
+			searchedIndex = getSeqSearch(borrowedUserName);
+			
+		}
+		else
+		{
+			searchedIndex = NOT_FOUND;
+		}
+	}
+	
+	public void setWriteOneRecord(String borrowedUserName, String borrowedPassword)
+	{
+		try
+		{
+			PrintWriter filePW = new PrintWriter (new FileWriter(getFileName(), true));
+			filePW.printf("%s\t%s\n", borrowedUserName, borrowedPassword);
+			fileFoundFlag = FILE_FOUND;
+			recordCount++;
+			filePW.close();
+		}
+		catch (IOException ex)
+		{
+			fileFoundFlag = FILE_NOT_FOUND;
+		}
+	}
+	
+	//Getters
+	public int getSeqSearch(String borrowedBorrowedUserName)
+	{
+		int localIndex = 0;
+		int found = NOT_FOUND;
+		
+		while (localIndex < recordCount)
+		{
+			if (userNames[localIndex].equalsIgnoreCase(borrowedBorrowedUserName))
+			{
+				found = localIndex;
+				localIndex = recordCount;
+			}
+			else
+			{
+				localIndex++;
+			}
+		}
+				
+		return found;
+	}
+	
+	public boolean getPasswordMatch(String borrowedBorrowedPassword)
+	{
+		return passwords[searchedIndex].equals(borrowedBorrowedPassword);
+	}
+	
+	public int getSearchedIndex()
+	{
+		return searchedIndex;
+	}
+	
+	public boolean getFileFoundFlag()
+	{
+		return fileFoundFlag;
+	}
+	
+	public int getRecordCount()
+	{
+		return recordCount;
+	}
+	
+	public String getFileName()
+	{
+		return masterFileName;
+	}
+	
+}//END UserAccounts
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
